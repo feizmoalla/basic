@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Brand;
+use App\Models\Multipic;
 use Illuminate\Support\Carbon;
-
 use Image;
 
 class BrandController extends Controller
@@ -119,5 +119,53 @@ class BrandController extends Controller
         Brand::find($id)->delete();
 
         return Redirect()->back()->with('fail','Brand Deleted !');
+    }
+
+
+
+    //This is for multi Image All Methods
+
+    public function Multipic()
+    {
+        $images = Multipic::all();
+        return view('admin.multipic.index', compact('images'));
+    }
+
+
+
+    public function StoreImg(Request $request)
+    {
+            $validateData = $request->validate([
+                'image' => 'required',
+                'image.*' => 'mimes:jpg,jpeg,png,gif',
+
+
+            ],[
+                'image.required' => 'Please Import Images',
+                'image.mimes'    => 'The images must be a file of type : jpg, jpeg, png, gif',
+
+            ]);
+
+
+
+        $image = $request->file('image');
+
+        foreach($image as $multi_img){
+
+            $name_gen = hexdec(uniqid()).'.'.$multi_img->getClientOriginalExtension();
+
+            $last_img = 'image/multi/'.$name_gen;
+
+            Image::make($multi_img)->resize(300,300)->save($last_img);
+
+
+            Multipic::insert([
+                'image' => $last_img,
+                'created_at' => Carbon::now()
+            ]);
+
+
+        }
+        return Redirect()->back()->with('success','Images Inserted Successfully');
     }
 }
