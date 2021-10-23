@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Brand;
 use Illuminate\Support\Carbon;
 
+use Image;
+
 class BrandController extends Controller
 {
     public function AllBrand(){
@@ -30,17 +32,23 @@ class BrandController extends Controller
 
         $brand_image = $request->file('brand_image');
 
-        $name_gen = hexdec(uniqid());
+        // $name_gen = hexdec(uniqid());
 
-        $image_ext = strtolower($brand_image->getClientOriginalExtension());
+        // $image_ext = strtolower($brand_image->getClientOriginalExtension());
 
-        $img_name = $name_gen.'.'.$image_ext;
+        // $img_name = $name_gen.'.'.$image_ext;
 
-        $up_location = 'image/brand/';
+        // $up_location = 'image/brand/';
 
-        $last_img = $up_location.$img_name;
+        // $last_img = $up_location.$img_name;
 
-        $brand_image->move($up_location, $last_img);
+        // $brand_image->move($up_location, $last_img);
+
+        $name_gen = hexdec(uniqid()).'.'.$brand_image->getClientOriginalExtension();
+
+        $last_img = 'image/brand/'.$name_gen;
+
+        Image::make($brand_image)->resize(500,500)->save($last_img);
 
 
         Brand::insert([
@@ -101,5 +109,15 @@ class BrandController extends Controller
 
 
         return Redirect()->back()->with('success','Brand Updated Successfully');
+    }
+
+    public function Delete($id)
+    {
+        $brand = Brand::find($id);
+        $old_image = $brand->brand_image;
+        unlink($old_image);
+        Brand::find($id)->delete();
+
+        return Redirect()->back()->with('fail','Brand Deleted !');
     }
 }

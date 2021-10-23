@@ -23,6 +23,16 @@
 
                         @endif
 
+
+                        @if(session('fail'))
+
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>{{ session('fail') }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        @endif
+
                         <div class="card-header">All Brand</div>
                         <div class="card-body">
                             <table class="table">
@@ -55,7 +65,7 @@
                                     </td>
                                     <td>
                                         <a href="{{ url('brand/edit/'.$brand->id) }}" class="btn btn-info">Edit</a>
-                                        <a href="{{ url('brand/delete/'.$brand->id) }}" class="btn btn-danger">Remove </a>
+                                        <a href="{{ url('brand/delete/'.$brand->id) }}" onclick="return confirm('Are you Sure ?')" class="btn btn-danger">Remove </a>
 
                                     </td>
 

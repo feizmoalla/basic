@@ -55,9 +55,8 @@ Route::get('/pdelete/category/{id}', [CategoryController::class, 'PDelete']);
 Route::get('/brand/all', [BrandController::class, 'AllBrand'])->name('all.brand');
 Route::post('/brand/add', [BrandController::class, 'StoreBrand'])->name('store.brand');
 Route::get('/brand/edit/{id}', [BrandController::class, 'Edit']);
-Route::get('/brand/delete/{id}', [BrandController::class, 'StoreBrand']);
+Route::get('/brand/delete/{id}', [BrandController::class, 'Delete']);
 Route::post('/brand/update/{id}', [BrandController::class, 'Update']);
-
 
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
